@@ -26,7 +26,7 @@ const flashMsg = require('connect-flash'); // Cria mensagens temporarias, que so
 
 const routes = require('./routes'); // Caminho de cada rotas do app (ex: /home, /sobre, /contatos)
 const path = require('path');
-const helmet = require('helmet');
+app.use(helmet({ contentSecurityPolicy: false }));
 const csrf = require('csurf'); // Token para evitar que aplicativo ou sites externos nao consigam postar nada pra dentro da nossa aplicacao. No nosso app, cada form tem seu proprio token que sao
 //... comparados com o token gerado, e so passa para o proximo passo se esses tokens forem iguais.
 
