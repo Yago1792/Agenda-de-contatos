@@ -26,7 +26,7 @@ const flashMsg = require('connect-flash'); // Cria mensagens temporarias, que so
 
 const routes = require('./routes'); // Caminho de cada rotas do app (ex: /home, /sobre, /contatos)
 const path = require('path');
-app.use(helmet({ contentSecurityPolicy: false }));
+const helmet = require('helmet');
 const csrf = require('csurf'); // Token para evitar que aplicativo ou sites externos nao consigam postar nada pra dentro da nossa aplicacao. No nosso app, cada form tem seu proprio token que sao
 //... comparados com o token gerado, e so passa para o proximo passo se esses tokens forem iguais.
 
@@ -34,14 +34,18 @@ const csrf = require('csurf'); // Token para evitar que aplicativo ou sites exte
 // Middlewares sao funcions que sao executadas NA ROTA. Depois da requisicao, podemos mandar alguma coisa no meio do caminho antes ou depois da resposta (res)
 const { middlewareGlobal, outroMiddleware, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware');
 
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: false
+    })
+);
 app.use(express.urlencoded({ extended: true })); // Permite a postagem de formularios dentro da nossa aplicacao
 app.use(express.json()); // Permite o parse de JSON para dentro da nossa aplicacao
 app.use(express.static(path.resolve(__dirname, 'public'))); // Essa eh a config dos arquivos estaticos (por exemplo, nosso bundle.js)
 
 // Configurando a session
 const sessionOptions = session({
-    secret: 'Qualquer coisa, mas ngm pode saber',
+    secret: 'JSEHMTOBOM',
     // store: new MongoStore({ mongooseConnection: mongoose.connection}),
     store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }),
     resave: false,
